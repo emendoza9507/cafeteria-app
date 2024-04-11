@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_has_manu_has_offers', function (Blueprint $table) {
-            $table->foreignId('order_id')->primary()->references('id')->on('orders');
-            $table->foreignId('menu_has_offers_id')->primary()->references('id')->on('menu_has_offers');
+            $table->foreignId('order_id')->references('id')->on('orders');
+            $table->foreignId('menu_has_offers_id')->references('id')->on('menu_has_offers');
+            $table->primary(['order_id', 'menu_has_offers_id']);
         });
     }
 
