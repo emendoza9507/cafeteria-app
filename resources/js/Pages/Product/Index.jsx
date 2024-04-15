@@ -2,140 +2,58 @@ import HeaderModule from '@/Components/HeaderModule';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import TableCell from '@mui/material/TableCell';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Collapse, IconButton, Pagination, Switch, Table, TableBody, TableHead, TableRow, Typography } from '@mui/material';
-import { Fragment, useState } from 'react';
-import DeleteModal from '@/Components/DeleteModal';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { red } from '@mui/material/colors';
+import { Box, Button, Grid, Pagination, Table, TableBody, TableHead, TableRow, TextField } from '@mui/material';
+import CustomTableRow from './partials/CustomTableRow';
+import SearchIcon from '@mui/icons-material/Search';
+import { useState } from 'react';
 
 const SyledTableCell = ({children, ...props}) => (<TableCell sx={{fontWeight: 700}} {...props}>{children}</TableCell>)
-const CustomTableRow = ({product}) => {
-    const [open, setOpen] = useState(false);
-    let remove = useForm({}).delete;
 
-    const handleDelete = () => {
-        remove(route('product.destroy', { product }))
+
+const SearchBox = ({onChange, ...props}) => {
+    const [value, setValue] = useState('');
+
+    const handleChange = (e) => {
+        setValue(e.target.value)
+        onChange(e.target.value)
     }
 
-    const detailOptions = [
-        {
-            label: 'CATEGORIA',
-            value: product.category.category_name
-        },
-        {
-            label: 'STOCK',
-            value: `${product.stock} ${product.um}`
-        },
-        {
-            label: 'MIN. STOCK',
-            value: product.min_stock
-        },
-        {
-            label: 'PRECIO/VENTA',
-            value: `$${product.sale_price}`
-        },
-        {
-            label: 'PRECIO/COMPRA',
-            value: `$${product.purchase_price}`
-        },
-        {
-            label: 'DESCRIPCION',
-            value: product.description
-        },
-        {
-            label: 'ESTADO',
-            value: (<Switch
-                disabled
-                checked={Boolean(product.active)}
-                inputProps={{ 'aria-label': 'controlled' }}
-            />)
-        }
-    ];
-
     return (
-        <Fragment>
-            <TableRow  sx={{ '& > *': { borderBottom: 'unset' } }}>
-                <TableCell className='w-10'>
-                    <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={() => setOpen(!open)}
-                    >
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
-                <TableCell >{product.name}</TableCell>
-                <TableCell className="hidden sm:table-cell">{product.category.category_name}</TableCell>
-                <TableCell className="hidden sm:table-cell">
-                    { product.stock }
-                    { product.stock < product.min_stock && <NotificationsActiveIcon color={"warning"}/> }
-                </TableCell>
-                <TableCell className="hidden sm:table-cell">
-                    <Switch
-                        disabled
-                        checked={Boolean(product.active)}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
-                </TableCell>
-                <TableCell align='center' className='w-28'>
-                    <Box>
-                        <Link href={route('product.edit', product)}>
-                        <IconButton size='small'>
-                            <EditIcon color='action'/>
-                        </IconButton>
-                        </Link>
-                        <DeleteModal
-                            body="Seguro desea eliminar este producto?"
-                            icon={(<DeleteIcon className='text-red-300'/>)}
-                            onAccept={handleDelete}
-                        />
-                    </Box>
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    <Box sx={{ margin: 1 }}>
-                        <Typography variant='subtitle1' fontWeight={600} align='center' className='uppercase tracking-widest'>
-                            Detalles
-                        </Typography>
-                        <Table size="small" aria-label="purchases">
-                            <TableBody>
-                                {
-                                    (detailOptions).map(({label, value}, index) => (
-                                        <TableRow key={index} className='hover:bg-gray-100'>
-                                            <SyledTableCell className="border-none" align="center">
-                                                {label}
-                                            </SyledTableCell>
-                                            <TableCell className="border-none" align="center" width="50%">
-                                                {value}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                }
-                            </TableBody>
-                        </Table>
-                    </Box>
-                </Collapse>
-                </TableCell>
-            </TableRow>
-        </Fragment>
+        <Grid container columns={12} justifyContent="center" {...props}>
+            <Grid item xs={12} sm={6} paddingX={2}>
+                <TextField
+                    fullWidth
+                    variant='outlined'
+                    size='small'
+                    value={value}
+                    onChange={handleChange}
+                    InputProps={{
+                        startAdornment: <SearchIcon/>
+                    }}
+                />
+            </Grid>
+        </Grid>
     )
 }
 
 export default function ProductList({ auth, pagination, ...props }) {
     const title = "PRODUCTOS";
     const products = Array.from(pagination.data || []);
+    const [filteredProducts, setFilterdProducts] = useState(products)
 
     const handlePageChange = (e, p) => {
         router.get(pagination.links[p].url)
+    }
+
+    const handleFilter = (filter) => {
+        const filtered = products.filter(p => {
+            const query = p.name.toLowerCase().includes(filter.toLocaleLowerCase()) ||
+            p.category.category_name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
+
+            return query
+        })
+        setFilterdProducts(filtered)
     }
 
     return (
@@ -149,6 +67,8 @@ export default function ProductList({ auth, pagination, ...props }) {
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
                 <HeaderModule title={title}/>
+
+                <SearchBox className="mb-2" onChange={handleFilter}/>
 
                 <Box className="bg-white overflow-hidden overflow-y-auto shadow-sm hideScroll" sx={{maxHeight: 600, overflow: 'scroll'}}>
                     <Table>
@@ -169,7 +89,7 @@ export default function ProductList({ auth, pagination, ...props }) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            { products.map((product) => (<CustomTableRow key={product.id} product={product}/>)) }
+                            { filteredProducts.map((product) => (<CustomTableRow key={product.id} product={product}/>)) }
                         </TableBody>
                     </Table>
                 </Box>
