@@ -14,6 +14,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Logout from '@mui/icons-material/Logout';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import { AppBar, IconButton, Menu, MenuItem, Snackbar, Toolbar, Tooltip, Typography} from '@mui/material';
 import { Settings } from '@mui/icons-material';
@@ -43,7 +44,8 @@ export default function Authenticated({ user, header, children, flash }) {
 
     const drawerOptions = [
         { label: 'Productos', href: route('product.index'), icon: <InventoryIcon/> },
-        { label: 'Mesas', href: route('table.index'), icon: <TableRestaurantIcon/> }
+        { label: 'Mesas', href: route('table.index'), icon: <TableRestaurantIcon/> },
+        { label: 'Proveedores', href: route('supplier.index'), icon: <PeopleAltIcon /> }
     ];
 
     const DrawerList = (

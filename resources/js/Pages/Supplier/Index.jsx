@@ -16,7 +16,7 @@ import axios from 'axios';
 import { red } from '@mui/material/colors';
 
 const SyledTableCell = ({children, ...props}) => (<TableCell sx={{fontWeight: 700}} {...props}>{children}</TableCell>)
-const CustomTableRow = ({product}) => {
+const CustomTableRow = ({supplier}) => {
     const [open, setOpen] = useState(false);
     let remove = useForm({}).delete;
 
@@ -26,34 +26,26 @@ const CustomTableRow = ({product}) => {
 
     const detailOptions = [
         {
-            label: 'CATEGORIA',
-            value: product.category.category_name
+            label: 'NOMBRE',
+            value: supplier.name
         },
         {
-            label: 'STOCK',
-            value: `${product.stock} ${product.um}`
+            label: 'EMAIL',
+            value: supplier.email
         },
         {
-            label: 'MIN. STOCK',
-            value: product.min_stock
+            label: 'DIRECCION',
+            value: `${supplier.state},${supplier.city},${supplier.street}`
         },
         {
-            label: 'PRECIO/VENTA',
-            value: `$${product.sale_price}`
-        },
-        {
-            label: 'PRECIO/COMPRA',
-            value: `$${product.purchase_price}`
-        },
-        {
-            label: 'DESCRIPCION',
-            value: product.description
+            label: 'phone_numbers',
+            value: supplier.phone_numbers
         },
         {
             label: 'ESTADO',
             value: (<Switch
                 disabled
-                checked={Boolean(product.active)}
+                checked={Boolean(supplier.active)}
                 inputProps={{ 'aria-label': 'controlled' }}
             />)
         }
@@ -71,16 +63,12 @@ const CustomTableRow = ({product}) => {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell >{product.name}</TableCell>
-                <TableCell className="hidden sm:table-cell">{product.category.category_name}</TableCell>
-                <TableCell className="hidden sm:table-cell">
-                    { product.stock }
-                    { product.stock < product.min_stock && <NotificationsActiveIcon color={"warning"}/> }
-                </TableCell>
+                <TableCell >{supplier.name}</TableCell>
+                <TableCell className="hidden sm:table-cell">{supplier.email}</TableCell>
                 <TableCell className="hidden sm:table-cell">
                     <Switch
                         disabled
-                        checked={Boolean(product.active)}
+                        checked={Boolean(supplier.active)}
                         inputProps={{ 'aria-label': 'controlled' }}
                     />
                 </TableCell>
@@ -130,8 +118,8 @@ const CustomTableRow = ({product}) => {
     )
 }
 
-export default function ProductList({ auth, pagination, ...props }) {
-    const title = "PRODUCTOS";
+export default function ProveedorList({ auth, pagination, ...props }) {
+    const title = "PROVEEDORES";
     const products = Array.from(pagination.data || []);
 
     const handlePageChange = (e, p) => {
@@ -156,9 +144,8 @@ export default function ProductList({ auth, pagination, ...props }) {
                             <TableRow >
                                 <SyledTableCell></SyledTableCell>
                                 <SyledTableCell>NOMBRE</SyledTableCell>
-                                <SyledTableCell className="hidden sm:table-cell">CATEGORIA</SyledTableCell>
-                                <SyledTableCell className="hidden sm:table-cell">STOCK</SyledTableCell>
-                                <SyledTableCell className="hidden sm:table-cell">ACTIVE</SyledTableCell>
+                                <SyledTableCell className="hidden sm:table-cell">EMAIL</SyledTableCell>
+                                <SyledTableCell className="hidden sm:table-cell">ESTADO</SyledTableCell>
                                 <TableCell align='center'>
                                     <Link href={route('product.create')}>
                                     <Button variant='outlined' startIcon={<AddIcon />}>
