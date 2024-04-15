@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
-
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -18,46 +13,64 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Logout from '@mui/icons-material/Logout';
-import { AppBar, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
-import { AccountCircle, Settings } from '@mui/icons-material';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
+import { AppBar, IconButton, Menu, MenuItem, Snackbar, Toolbar, Tooltip, Typography} from '@mui/material';
+import { Settings } from '@mui/icons-material';
+import { useEffect } from 'react';
 
-export default function Authenticated({ user, header, children }) {
-    const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+export default function Authenticated({ user, header, children, flash }) {
     const [open, setOpen] = useState(false);
+    const [openSnack, setOpenSnack] = useState(flash ? (flash.message ? true : false) : false);
     const [anchorEl, setAnchorEl] = useState(null)
+    const message = flash ? (flash.message ? flash.message : null) : null
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
-
-    const handleChange = (event) => {
-        setAuth(event.target.checked);
-    };
-
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };
-
     const handleClose = () => {
         setAnchorEl(null);
     };
 
+    useEffect(() => {
+        if(message) {
+            setOpenSnack(true)
+        }
+    }, [message])
+
+    const drawerOptions = [
+        { label: 'Productos', href: route('product.index'), icon: <InventoryIcon/> },
+        { label: 'Mesas', href: route('table.index'), icon: <TableRestaurantIcon/> }
+    ];
+
     const DrawerList = (
-        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-          <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
+        <Box sx={{ width: 250 }} role="presentation" >
+            <List>
+                <ListItem>
+                    <ListItemText variant="h3" className='uppercase text-gray-400' sx={{'& span': {fontWeight: 600, letterSpacing: '0.3em'}}}>
+                        Administracion
+                    </ListItemText>
+                </ListItem>
+            {drawerOptions.map((option, index) => (
+                <Link key={index} href={option.href}>
+                    <ListItem key={option.label} disablePadding>
+                        <ListItemButton >
+                            {option.icon && (
+                                <ListItemIcon>
+                                    {option.icon}
+                                </ListItemIcon>
+                            )}
+                            <ListItemText primary={option.label} />
+                        </ListItemButton>
+                    </ListItem>
+                </Link>
             ))}
-          </List>
-          <Divider />
-          <List>
+            </List>
+            <Divider />
+            <List>
             {['All mail', 'Trash', 'Spam'].map((text, index) => (
               <ListItem key={text} disablePadding>
                 <ListItemButton>
@@ -68,12 +81,18 @@ export default function Authenticated({ user, header, children }) {
                 </ListItemButton>
               </ListItem>
             ))}
-          </List>
+            </List>
         </Box>
-      );
+    );
 
     return (
         <div className="min-h-screen bg-gray-100">
+            {message && (<Snackbar
+                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                open={openSnack}
+                onClose={() => setOpenSnack(false)}
+                message={flash.message}
+            />)}
             <AppBar>
                 <Toolbar>
                     <IconButton
@@ -86,8 +105,12 @@ export default function Authenticated({ user, header, children }) {
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        H&M
+                    <Typography variant="h6" component="div" className='flex justify-center flex-1'>
+                        <Link href={route('dashboard')} className='flex items-center'>
+                            <span className='text-md'>H</span>
+                            <span className='text-3xl font-bold'>&</span>
+                            <span className='text-md'>M</span>
+                        </Link>
                     </Typography>
                     <div>
                         <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -159,13 +182,11 @@ export default function Authenticated({ user, header, children }) {
                 </Toolbar>
             </AppBar>
 
-            <div>
-                <Drawer open={open} onClose={toggleDrawer(false)}>
-                    {DrawerList}
-                </Drawer>
-            </div>
+            <Drawer open={open} onClose={toggleDrawer(false)}>
+                {DrawerList}
+            </Drawer>
 
-            <main className='mt-10'>{children}</main>
+            <main className='pt-16'>{children}</main>
         </div>
     );
 }

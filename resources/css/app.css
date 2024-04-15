@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*:focus
+{
+    box-shadow: none !important;
+}
+
+.hideScroll {
+    overflow: auto;
+    scrollbar-width: none; /*Firefox*/
+}
+
+  /*Webkit*/
+.hideScroll::-webkit-scrollbar {
+    width: 0;
+}
+

@@ -17,10 +17,11 @@ return new class extends Migration
             $table->string('name');
             $table->decimal('sale_price');
             $table->decimal('purchase_price');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->decimal('stock');
             $table->decimal('min_stock')->default('0.00');
             $table->string('um');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
