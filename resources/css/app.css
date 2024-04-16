@@ -17,3 +17,17 @@
     width: 0;
 }
 
+
+#imgBox
+{
+
+}
+
+#imgBox:hover #clearImg {
+    display: flex;
+}
+
+#clearImg
+{
+    top: 0;
+}

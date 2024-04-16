@@ -8,11 +8,22 @@ import EditIcon from '@mui/icons-material/Edit';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import DeleteModal from '@/Components/DeleteModal';
 import { Box, Collapse, IconButton, Switch, Table, TableBody, TableRow, TextField, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 const SyledTableCell = ({children, ...props}) => (<TableCell sx={{fontWeight: 700}} {...props}>{children}</TableCell>)
 
+const useStyles = makeStyles((theme) => ({
+    container: {
+        maxWidth: '160px',
+        margin: '0 auto'
+    },
+    image: {
+        width: '100%'
+    }
+}));
 
 export default function CustomTableRow ({product}) {
+    const classes = useStyles();
     const [open, setOpen] = useState(false);
     let remove = useForm({}).delete;
 
@@ -21,6 +32,10 @@ export default function CustomTableRow ({product}) {
     }
 
     const detailOptions = [
+        {
+            label: 'NOMBRE',
+            value: product.name
+        },
         {
             label: 'CATEGORIA',
             value: product.category.category_name
@@ -40,6 +55,10 @@ export default function CustomTableRow ({product}) {
         {
             label: 'PRECIO/COMPRA',
             value: `$${product.purchase_price}`
+        },
+        {
+            label: 'IMAGEN',
+            value: (<Box className={classes.container}>{product.image && <img className={classes.image} src={`/storage/${product.image?.url}`}/>}</Box>)
         },
         {
             label: 'DESCRIPCION',
@@ -70,7 +89,7 @@ export default function CustomTableRow ({product}) {
                 <TableCell >{product.name}</TableCell>
                 <TableCell className="hidden sm:table-cell">{product.category.category_name}</TableCell>
                 <TableCell className="hidden sm:table-cell">
-                    { product.stock }
+                    { product.stock }{ product.um }
                     { product.stock < product.min_stock && <NotificationsActiveIcon color={"warning"}/> }
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">

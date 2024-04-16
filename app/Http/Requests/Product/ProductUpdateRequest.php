@@ -28,7 +28,9 @@ class ProductUpdateRequest extends FormRequest
             'purchase_price'        => 'decimal:0,2|min:0',
             'stock'                 => 'decimal:0,2|min:0',
             'min_stock'             => 'decimal:0,2|min:0',
-            'um'                    => 'string'
+            'um'                    => 'string',
+
+            'image'                 => 'file|image'
         ];
     }
 }

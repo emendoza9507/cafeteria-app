@@ -9,17 +9,56 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
 import { green } from '@mui/material/colors';
+import { makeStyles } from '@mui/styles';
+import ImageBox from './partials/ImageBox';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > *': {
+            margin: 2,
+        },
+        textAlign: 'center',
+        display: 'flex',
+        flexDirection: 'column !important'
+    },
+    input: {
+        display: 'none'
+    },
+
+    imgBox: {
+        position: 'relative',
+        maxWidth: '360px',
+        alignSelf: 'center',
+    },
+
+    clearImg: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#000000a3',
+        top: 0,
+        display: 'none',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
+    img: {
+        width: '100%'
+    }
+}))
 
 export default function Edit({ auth, product, categories,flash, ...props }) {
+    const classes = useStyles();
     const title = "EDITAR PRODUCTO";
     const [openSnack, setOpenSnack] = useState(flash ? (flash.message ? true : false) : false);
     const message = flash ? (flash.message ? flash.message : null) : null
     const [products, setProducts] = useState(Array.from([]));
-
+    const [file, setFile] = useState(product.image ? `/storage/${product.image.url}` : null);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
-    const { data, errors, put, reset, setData } = useForm({
+    const { data, errors, post, reset, setData } = useForm({
+        _method: 'put',
         id: product.id,
         name: product.name,
         product_category_id:  product.product_category_id,
@@ -28,8 +67,14 @@ export default function Edit({ auth, product, categories,flash, ...props }) {
         description:  product.description ? product.description : '',
         sale_price:  product.sale_price,
         purchase_price:  product.purchase_price,
-        um: product.um
+        um: product.um,
+        image: ''
     })
+
+    const handleChangeImage = (e) => {
+        setData('image', e.target.files[0])
+        setFile(URL.createObjectURL(e.target.files[0]))
+    }
 
     const buttonSx = {
         ...(success && {
@@ -43,7 +88,7 @@ export default function Edit({ auth, product, categories,flash, ...props }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoading(true)
-        put(route('product.update', { product }), {
+        post(route('product.update', { product }), {
             onError: () => {
                 setSuccess(false)
                 setLoading(false)
@@ -95,14 +140,12 @@ export default function Edit({ auth, product, categories,flash, ...props }) {
                     <Grid component='form' columns={12} onSubmit={handleSubmit} container  spacing={2} className='px-4 py-6'>
                         <Grid item xs={12}>
                             <Autocomplete
-                                id="grouped-demo"
                                 freeSolo
                                 options={products.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                                 groupBy={(option) => option.firstLetter}
                                 getOptionLabel={(option) => option.name}
                                 getOptionKey={(option) => option.name}
                                 onChange={(_, e) => setData('name', e.name)}
-                                inputValue={data.name}
                                 renderInput={(params) => <TextField
                                     fullWidth
                                     id="name"
@@ -120,76 +163,91 @@ export default function Edit({ auth, product, categories,flash, ...props }) {
                         </Grid>
                         <Grid item xs={12} container display="flex" justifyContent="space-around">
                             <Grid item xs container direction="row" spacing={2}>
-                                <Grid item xs={6} md={3}>
-                                    <TextField
-                                        fullWidth
-                                        id="purche_price"
-                                        name="sale_price"
-                                        margin='normal'
-                                        label="Precio de Venta"
-                                        type='number'
-                                        step="any"
-                                        variant="outlined"
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position='start'>$</InputAdornment>
-                                        }}
-                                        value={data.sale_price}
-                                        onChange={(e) => setData('sale_price', e.target.value)}
-                                    />
-                                    <InputError message={errors.sale_price} className="mt-2" />
+                                <Grid item xs={12} md={6} className={classes.root}>
+                                    <ImageBox file={file} handleChangeImage={handleChangeImage} handleRemoveImage={(e) => {
+                                        reset('image')
+                                        setFile(null)
+                                    }} />
+                                    <InputError message={errors.image} className="mt-2" />
                                 </Grid>
-                                <Grid item xs={6} md={3}>
-                                    <TextField
-                                        fullWidth
-                                        id="purche_price"
-                                        name="purchase_price"
-                                        margin='normal'
-                                        label="Precio de Compra"
-                                        variant="outlined"
-                                        type='number'
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position='start'>$</InputAdornment>
-                                        }}
-                                        value={data.purchase_price}
-                                        onChange={(e) => setData('purchase_price', e.target.value)}
-                                    />
-                                    <InputError message={errors.purchase_price} className="mt-2" />
+                                <Grid item md={6} container direction="row" spacing={2}>
+                                    <Grid item xs={6} md={6} display="flex" alignItems="center">
+                                        <Box>
+                                            <TextField
+                                                fullWidth
+                                                id="purche_price"
+                                                name="sale_price"
+                                                margin='normal'
+                                                label="Precio de Venta"
+                                                type='number'
+                                                step="any"
+                                                variant="outlined"
+                                                InputProps={{
+                                                    startAdornment: <InputAdornment position='start'>$</InputAdornment>
+                                                }}
+                                                value={data.sale_price}
+                                                onChange={(e) => setData('sale_price', e.target.value)}
+                                            />
+                                            <InputError message={errors.sale_price} className="mt-2" />
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={6} md={6} display="flex" alignItems="center">
+                                        <Box>
+                                            <TextField
+                                                fullWidth
+                                                id="purche_price"
+                                                name="purchase_price"
+                                                margin='normal'
+                                                label="Precio de Compra"
+                                                variant="outlined"
+                                                type='number'
+                                                InputProps={{
+                                                    startAdornment: <InputAdornment position='start'>$</InputAdornment>
+                                                }}
+                                                value={data.purchase_price}
+                                                onChange={(e) => setData('purchase_price', e.target.value)}
+                                            />
+                                            <InputError message={errors.purchase_price} className="mt-2" />
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={6} md={6} display="flex" direction="column" justifyContent="center">
+                                        <TextField
+                                            fullWidth
+                                            id="product_category_id"
+                                            name="product_category_id"
+                                            margin='normal'
+                                            label="Categoria"
+                                            select
+                                            variant="outlined"
+                                            value={data.product_category_id}
+                                            onChange={(e) => setData('product_category_id', e.target.value)}
+                                        >
+                                            {
+                                                Array.from(categories).map(({id, category_name}) => (
+                                                    <MenuItem key={id} value={id}>
+                                                        {category_name}
+                                                    </MenuItem>
+                                                ))
+                                            }
+                                        </TextField>
+                                        <InputError message={errors.product_category_id} className="mt-2" />
+                                    </Grid>
+                                    <Grid item xs={6} md={6} display="flex" alignItems="center">
+                                        <Box>
+                                            <TextField
+                                                fullWidth
+                                                id="um"
+                                                name="um"
+                                                margin='normal'
+                                                label="Unidad de Medida"
+                                                variant="outlined"
+                                                value={data.um}
+                                                onChange={(e) => setData('um', e.target.value)}
+                                            />
+                                            <InputError message={errors.um} className="mt-2" />
+                                        </Box>
+                                    </Grid >
                                 </Grid>
-                                <Grid item xs={6} md={3}>
-                                    <TextField
-                                        fullWidth
-                                        id="product_category_id"
-                                        name="product_category_id"
-                                        margin='normal'
-                                        label="Categoria"
-                                        select
-                                        variant="outlined"
-                                        value={data.product_category_id}
-                                        onChange={(e) => setData('product_category_id', e.target.value)}
-                                    >
-                                        {
-                                            Array.from(categories).map(({id, category_name}) => (
-                                                <MenuItem key={id} value={id}>
-                                                    {category_name}
-                                                </MenuItem>
-                                            ))
-                                        }
-                                    </TextField>
-                                    <InputError message={errors.product_category_id} className="mt-2" />
-                                </Grid>
-                                <Grid item xs={6} md={3}>
-                                    <TextField
-                                        fullWidth
-                                        id="um"
-                                        name="um"
-                                        margin='normal'
-                                        label="Unidad de Medida"
-                                        variant="outlined"
-                                        value={data.um}
-                                        onChange={(e) => setData('um', e.target.value)}
-                                    />
-                                    <InputError message={errors.um} className="mt-2" />
-                                </Grid >
                             </Grid>
                         </Grid>
                         <Grid item xs={12} container display="flex" justifyContent="space-around">
@@ -201,13 +259,13 @@ export default function Edit({ auth, product, categories,flash, ...props }) {
                                         name="stock"
                                         margin='normal'
                                         label="Stock"
-                                        disabled
                                         type='number'
                                         variant="outlined"
                                         value={data.stock}
                                         InputProps={{
                                             endAdornment: <InputAdornment position='end'>{data.um}</InputAdornment>
                                         }}
+                                        onChange={(e) => setData('stock', e.target.value)}
                                     />
                                     <InputError message={errors.stock} className="mt-2" />
                                 </Grid>
@@ -244,25 +302,10 @@ export default function Edit({ auth, product, categories,flash, ...props }) {
                             />
                             <InputError message={errors.description} className="mt-2" />
                         </Grid>
-                        <Grid item xs={12} sx={{ m: 1,position: 'relative'}} display="flex" justifyContent="end" >
-                            <Box sx={{ m: 1,position: 'relative'}}>
-                                <Button disabled={loading} sx={buttonSx} type='submit' variant='contained'>
-                                    GUARDAR
-                                </Button>
-                                {loading && (
-                                    <CircularProgress
-                                        size={24}
-                                        sx={{
-                                        color: green[500],
-                                        position: 'absolute',
-                                        top: '50%',
-                                        left: '50%',
-                                        marginTop: '-12px',
-                                        marginLeft: '-12px',
-                                        }}
-                                    />
-                                )}
-                            </Box>
+                        <Grid item xs={12} display="flex" justifyContent="end" >
+                            <Button type='submit' variant='contained'>
+                                CREAR
+                            </Button>
                         </Grid>
                     </Grid>
                 </div>

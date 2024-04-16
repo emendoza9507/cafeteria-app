@@ -6,6 +6,8 @@ use App\Http\Requests\Product\ProductStoreRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use Exception;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -15,7 +17,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $pagination = Product::with('category')
+        $pagination = Product::with(['category'])
             ->orderBy('id', 'desc')
             ->paginate(10);
         return Inertia::render('Product/Index', compact('pagination'));
@@ -38,7 +40,16 @@ class ProductController extends Controller
      */
     public function store(ProductStoreRequest $request)
     {
-        Product::create($request->validated());
+        $product = Product::create($request->safe()->except(['image']));
+
+        if($request->files->has('image')) {
+            $image = $request->image->store('images/products', 'public');
+
+            $product->image()->create([
+                'url' => $image
+            ]);
+        }
+
         return redirect()->back()->with('message', 'Producto creado.');
     }
 
@@ -67,7 +78,24 @@ class ProductController extends Controller
      */
     public function update(ProductUpdateRequest $request, Product $product)
     {
-        $product->update($request->validated());
+        $product->update($request->safe()->except(['image']));
+
+        if($request->files->has('image')) {
+            $image = $request->image->store('images/products', 'public');
+
+            if($product->image) {
+                Storage::disk('public')->delete($product->image->url);
+
+                $product->image->update([
+                    'url' => $image
+                ]);
+            } else {
+                $product->image()->create([
+                    'url' => $image
+                ]);
+            }
+        }
+
         return redirect()->route('product.edit', $product)->with('message', 'Producto actualizado.');
     }
 
@@ -76,6 +104,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if($product->stock > 0) {
+            return redirect()->back()->with('message', '!Error, posee '.$product->stock.$product->um.' en stock!');
+        }
+
         $product->update(['active' => false]);
 
         /** De ser necesario otra accion en adelante implementala aqui se sugiere utilizar Eventos **/

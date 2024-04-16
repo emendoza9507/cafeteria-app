@@ -12,6 +12,8 @@ class Product extends Model
 
     protected $guarded = [];
 
+    protected $with = ['image'];
+
     protected $casts = [
         'sale_price' => 'decimal:2'
     ];
