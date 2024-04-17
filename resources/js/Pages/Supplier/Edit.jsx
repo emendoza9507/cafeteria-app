@@ -10,25 +10,18 @@ import { useState } from 'react';
 import axios from 'axios';
 import { green } from '@mui/material/colors';
 
-export default function Edit({ auth, product, categories,flash, ...props }) {
-    const title = "EDITAR PRODUCTO";
+export default function Edit({ auth, supplier, flash, ...props }) {
+    const title = "EDITAR PROVEEDOR";
     const [openSnack, setOpenSnack] = useState(flash ? (flash.message ? true : false) : false);
     const message = flash ? (flash.message ? flash.message : null) : null
-    const [products, setProducts] = useState(Array.from([]));
 
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
     const { data, errors, put, reset, setData } = useForm({
-        id: product.id,
-        name: product.name,
-        product_category_id:  product.product_category_id,
-        stock: product.stock,
-        min_stock: product.min_stock,
-        description:  product.description ? product.description : '',
-        sale_price:  product.sale_price,
-        purchase_price:  product.purchase_price,
-        um: product.um
+        id: supplier.id,
+        name: supplier.name,
+
     })
 
     const buttonSx = {

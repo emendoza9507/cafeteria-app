@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
-            $table->string('email', 50);
-            $table->text('description');
+            $table->string('email', 50)->unique();
+            $table->text('description')->nullable();
             $table->string('city', 50);
-            $table->string('street', 20)->nullable();
+            $table->string('street', 50)->nullable();
             $table->string('state', 50);
-            $table->json('phone_numbers');
+            $table->json('phone_numbers')->nullable();
             $table->boolean('active');
             $table->timestamps();
         });

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SupplierController;
+use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,6 @@ Route::middleware('auth')->group(function () {
 
     /** AUTOCOMPLETE DE LOS NOMBRES **/
     Route::get('/suppliers', function() {
-        return Supplier::collection(Supplier::select(DB::raw('DISTINCT name'))->get());
+        return SupplierResource::collection(Supplier::select(DB::raw('DISTINCT name'))->get());
     })->name('supplier.resource.list');
 });

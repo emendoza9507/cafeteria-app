@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import HeaderModule from '@/Components/HeaderModule';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -6,36 +7,9 @@ import AddIcon from '@mui/icons-material/Add';
 import { Box, Button, Grid, Pagination, Table, TableBody, TableHead, TableRow, TextField } from '@mui/material';
 import CustomTableRow from './partials/CustomTableRow';
 import SearchIcon from '@mui/icons-material/Search';
-import { useState } from 'react';
+import SearchBox from '@/Components/SearchBox';
 
 const SyledTableCell = ({children, ...props}) => (<TableCell sx={{fontWeight: 700}} {...props}>{children}</TableCell>)
-
-
-const SearchBox = ({onChange, ...props}) => {
-    const [value, setValue] = useState('');
-
-    const handleChange = (e) => {
-        setValue(e.target.value)
-        onChange(e.target.value)
-    }
-
-    return (
-        <Grid container columns={12} justifyContent="center" {...props}>
-            <Grid item xs={12} sm={6} paddingX={2}>
-                <TextField
-                    fullWidth
-                    variant='outlined'
-                    size='small'
-                    value={value}
-                    onChange={handleChange}
-                    InputProps={{
-                        startAdornment: <SearchIcon/>
-                    }}
-                />
-            </Grid>
-        </Grid>
-    )
-}
 
 export default function ProductList({ auth, pagination, ...props }) {
     const title = "PRODUCTOS";

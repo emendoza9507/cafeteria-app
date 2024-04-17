@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useForm } from '@inertiajs/react';
 import { Fragment } from 'react';
 import TableCell from '@mui/material/TableCell';
@@ -13,6 +14,7 @@ const SyledTableCell = ({children, ...props}) => (<TableCell sx={{fontWeight: 70
 export default function CustomTableRow({supplier}) {
     const [open, setOpen] = useState(false);
     let remove = useForm({}).delete;
+    const phoneNumbers = JSON.parse(supplier.phone_numbers);
 
     const handleDelete = () => {
         remove(route('product.destroy', { product }))
@@ -32,8 +34,19 @@ export default function CustomTableRow({supplier}) {
             value: `${supplier.state},${supplier.city},${supplier.street}`
         },
         {
-            label: 'phone_numbers',
-            value: supplier.phone_numbers
+            label: 'TELEFONOS',
+            value: (
+            <Table size='small'>
+                <TableBody>
+                {Object.entries(phoneNumbers || {}).map(([key, value]) => (
+                    <TableRow key={key}>
+                        <TableCell className='font-bold' component='th' align='right'>{key}</TableCell>
+                        <TableCell align='center'>{value}</TableCell>
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+            )
         },
         {
             label: 'ESTADO',
@@ -68,7 +81,7 @@ export default function CustomTableRow({supplier}) {
                 </TableCell>
                 <TableCell align='center' className='w-28'>
                     <Box>
-                        <Link href={route('product.edit', product)}>
+                        <Link href={route('supplier.edit', supplier)}>
                         <IconButton size='small'>
                             <EditIcon color='action'/>
                         </IconButton>
