@@ -4,6 +4,7 @@ namespace App\Http\Requests\Supplier;
 
 use App\Models\Supplier;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SupplierUpdateRequest extends FormRequest
 {
@@ -31,12 +32,12 @@ class SupplierUpdateRequest extends FormRequest
     {
         return [
             'name'          => 'string',
-            'email'         => 'email|unique:'.Supplier::class. ','.$this->id,
+            'email'         => ['email', Rule::unique(Supplier::class, 'email')->ignore($this->id)],
             'description'   => 'nullable|string',
             'state'         => 'string',
             'city'          => 'string',
             'street'        => 'string',
-            'phone_number'  => 'json',
+            'phone_numbers'  => 'json',
             'active'        => 'boolean'
         ];
     }

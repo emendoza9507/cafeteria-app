@@ -61,7 +61,8 @@ class SupplierController extends Controller
      */
     public function update(SupplierUpdateRequest $request, Supplier $supplier)
     {
-        //
+        $supplier->update($request->validated());
+        return redirect()->back()->with('message', 'Proveedor actualziado.');
     }
 
     /**
