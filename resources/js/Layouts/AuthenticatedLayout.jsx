@@ -16,6 +16,7 @@ import Logout from '@mui/icons-material/Logout';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
+import CategoryIcon from '@mui/icons-material/Category';
 import { AppBar, IconButton, Menu, MenuItem, Snackbar, Toolbar, Tooltip, Typography} from '@mui/material';
 import { Settings } from '@mui/icons-material';
 import { useEffect } from 'react';
@@ -43,6 +44,7 @@ export default function Authenticated({ user, header, children, flash }) {
     }, [message])
 
     const drawerOptions = [
+        { label: 'Categorias', href: route('category.index'), icon: <CategoryIcon/> },
         { label: 'Productos', href: route('product.index'), icon: <InventoryIcon/> },
         { label: 'Mesas', href: route('table.index'), icon: <TableRestaurantIcon/> },
         { label: 'Proveedores', href: route('supplier.index'), icon: <PeopleAltIcon /> }

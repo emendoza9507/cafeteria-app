@@ -11,14 +11,14 @@ import { useEffect } from 'react';
 
 const SyledTableCell = ({children, ...props}) => (<TableCell sx={{fontWeight: 700}} {...props}>{children}</TableCell>)
 
-export default function ProveedorList({ auth, pagination, ...props }) {
-    const title = "PROVEEDORES";
-    const [suppliers, setSuppliers] = useState(pagination.data);
-    const [filteredSuppliers, setFilterdSuppliers] = useState(suppliers)
+export default function CategoryList({ auth, pagination, ...props }) {
+    const title = "CATEGORIAS";
+    const [categories, setCategories] = useState(pagination.data);
+    const [filteredCategories, setFilterdCategories] = useState(categories)
 
     useEffect(() => {
-        setSuppliers(pagination.data)
-        setFilterdSuppliers(pagination.data)
+        setCategories(pagination.data)
+        setFilterdCategories(pagination.data)
     } , [pagination])
 
     const handlePageChange = (e, p) => {
@@ -26,13 +26,12 @@ export default function ProveedorList({ auth, pagination, ...props }) {
     }
 
     const handleFilter = (filter) => {
-        const filtered = suppliers.filter(s => {
-            const query = s.name.toLowerCase().includes(filter.toLocaleLowerCase()) ||
-            s.email.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
+        const filtered = categories.filter(c => {
+            const query = c.name.toLowerCase().includes(filter.toLocaleLowerCase())
 
             return query
         })
-        setFilterdSuppliers(filtered)
+        setFilterdCategories(filtered)
     }
 
     return (
@@ -54,10 +53,8 @@ export default function ProveedorList({ auth, pagination, ...props }) {
                         <TableHead className='sticky top-0 bg-gray-300 z-10'>
                             <TableRow >
                                 <SyledTableCell>NOMBRE</SyledTableCell>
-                                <SyledTableCell className="hidden sm:table-cell">CORREO</SyledTableCell>
-                                <SyledTableCell className="hidden sm:table-cell">ACTIVO</SyledTableCell>
                                 <TableCell align='center'>
-                                    <Link href={route('supplier.create')}>
+                                    <Link href={route('category.create')}>
                                     <Button variant='outlined' startIcon={<AddIcon />}>
                                         Nuevo
                                     </Button>
@@ -66,7 +63,7 @@ export default function ProveedorList({ auth, pagination, ...props }) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            { filteredSuppliers.map((supplier) => (<CustomTableRow key={supplier.id} supplier={supplier}/>)) }
+                            { filteredCategories.map((category) => (<CustomTableRow key={category.id} category={category}/>)) }
                         </TableBody>
                     </Table>
                 </Box>

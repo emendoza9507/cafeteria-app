@@ -1,35 +1,57 @@
 import HeaderModule from '@/Components/HeaderModule';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
-import { Autocomplete, Box, FormControlLabel, Grid, IconButton, MenuItem, Switch, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography  } from '@mui/material';
+import { Autocomplete, Box, CircularProgress, FormControlLabel, Grid, MenuItem, Snackbar, Switch, TextField  } from '@mui/material';
 import InputError from '@/Components/InputError';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
+import { green } from '@mui/material/colors';
 import PhoneInput from './partials/PhoneInput';
 
+export default function Edit({ auth, category, flash, ...props }) {
+    const title = "EDITAR PROVEEDOR";
+    const [openSnack, setOpenSnack] = useState(flash ? (flash.message ? true : false) : false);
+    const message = flash ? (flash.message ? flash.message : null) : null
 
-export default function Create({ auth, ...props }) {
-    const title = "NUEVO PROVEEDOR";
     const [suppliers, setSuppliers] = useState([]);
 
-    const { data, errors, post, reset, setData } = useForm({
-        name: '',
-        email: '',
-        description: '',
-        city: '',
-        street: '',
-        state: '',
-        phone_numbers: '',
-        active: true
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+
+    const { data, errors, put, reset, setData } = useForm({
+        id: supplier.id,
+        category_name: category.category_name,
     })
+
+    const buttonSx = {
+        ...(success && {
+          bgcolor: green[500],
+          '&:hover': {
+            bgcolor: green[700],
+          },
+        }),
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('supplier.store'), {
-            onSuccess: () => reset()
+        setLoading(true)
+        put(route('supplier.update', { supplier }), {
+            onError: () => {
+                setSuccess(false)
+                setLoading(false)
+            },
+            onSuccess: () => {
+                setSuccess(true)
+                setOpenSnack(true)
+                setTimeout(() => {
+                    setOpenSnack(false)
+                    setSuccess(false)
+                    setLoading(false)
+                }, 2000)
+            }
         });
     }
 
@@ -51,6 +73,12 @@ export default function Create({ auth, ...props }) {
             user={auth.user}
             {...props}
         >
+            {message && (<Snackbar
+                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                open={openSnack}
+                onClose={() => setOpenSnack(false)}
+                message={flash.message}
+            />)}
 
             <Head title={title} />
 
@@ -69,6 +97,7 @@ export default function Create({ auth, ...props }) {
                                 getOptionLabel={(option) => option.name}
                                 getOptionKey={(option) => option.name}
                                 onChange={(_, e) => setData('name', e.name)}
+                                inputValue={data.name}
                                 renderInput={(params) => <TextField
                                     fullWidth
                                     id="name"
@@ -134,11 +163,11 @@ export default function Create({ auth, ...props }) {
                         </Grid>
                         <Grid item xs={12} container display="flex" justifyContent="space-around">
                             <Grid item xs container direction="row" spacing={2}>
-                                <Grid item xs={12} md={6}>
-                                    <PhoneInput onChange={phones => setData('phone_numbers', phones)}/>
+                                <Grid item xs={6}>
+                                    <PhoneInput value={data.phone_numbers} onChange={phones => setData('phone_numbers', phones)}/>
                                     <InputError message={errors.stock} className="mt-2" />
                                 </Grid>
-                                <Grid item xs={12} md={6} display="flex" alignItems="center">
+                                <Grid item xs={6} display="flex" alignItems="center">
                                     <Box>
                                         <FormControlLabel control={<Switch defaultChecked onChange={e => setData('active', !data.active)} />} label="Activo" />
                                         <InputError message={errors.min_stock} className="mt-2" />
@@ -159,8 +188,8 @@ export default function Create({ auth, ...props }) {
                             <InputError message={errors.description} className="mt-2" />
                         </Grid>
                         <Grid item xs={12} display="flex" justifyContent="end" >
-                            <Button type='submit' variant='contained'>
-                                CREAR
+                            <Button disabled={loading} type='submit' variant='contained'>
+                                GUARDAR
                             </Button>
                         </Grid>
                     </Grid>

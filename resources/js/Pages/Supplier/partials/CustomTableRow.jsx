@@ -6,6 +6,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteModal from '@/Components/DeleteModal';
 import { Box, Collapse, IconButton, Switch, Table, TableBody, TableRow, Typography } from '@mui/material';
 
@@ -17,7 +18,7 @@ export default function CustomTableRow({supplier}) {
     const phoneNumbers = JSON.parse(supplier.phone_numbers);
 
     const handleDelete = () => {
-        remove(route('product.destroy', { product }))
+        remove(route('supplier.destroy', { supplier }))
     }
 
     const detailOptions = [
@@ -61,15 +62,6 @@ export default function CustomTableRow({supplier}) {
     return (
         <Fragment>
             <TableRow  sx={{ '& > *': { borderBottom: 'unset' } }}>
-                <TableCell className='w-10'>
-                    <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={() => setOpen(!open)}
-                    >
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
                 <TableCell >{supplier.name}</TableCell>
                 <TableCell className="hidden sm:table-cell">{supplier.email}</TableCell>
                 <TableCell className="hidden sm:table-cell">
@@ -81,44 +73,22 @@ export default function CustomTableRow({supplier}) {
                 </TableCell>
                 <TableCell align='center' className='w-28'>
                     <Box>
+                        <Link href={route('supplier.show', supplier)}>
+                        <IconButton size="small">
+                            <VisibilityIcon/>
+                        </IconButton>
+                        </Link>
                         <Link href={route('supplier.edit', supplier)}>
                         <IconButton size='small'>
-                            <EditIcon color='action'/>
+                            <EditIcon className='text-orange-400' color='action'/>
                         </IconButton>
                         </Link>
                         <DeleteModal
-                            body="Seguro desea eliminar este producto?"
+                            body="Seguro desea eliminar este proveedor?"
                             icon={(<DeleteIcon className='text-red-300'/>)}
                             onAccept={handleDelete}
                         />
                     </Box>
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    <Box sx={{ margin: 1 }}>
-                        <Typography variant='subtitle1' fontWeight={600} align='center' className='uppercase tracking-widest'>
-                            Detalles
-                        </Typography>
-                        <Table size="small" aria-label="purchases">
-                            <TableBody>
-                                {
-                                    (detailOptions).map(({label, value}, index) => (
-                                        <TableRow key={index} className='hover:bg-gray-100'>
-                                            <SyledTableCell className="border-none" align="center">
-                                                {label}
-                                            </SyledTableCell>
-                                            <TableCell className="border-none" align="center" width="50%">
-                                                {value}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                }
-                            </TableBody>
-                        </Table>
-                    </Box>
-                </Collapse>
                 </TableCell>
             </TableRow>
         </Fragment>

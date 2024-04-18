@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Supplier\SupplierStoreRequest;
 use App\Http\Requests\Supplier\SupplierUpdateRequest;
+use App\Models\Request as ModelsRequest;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -43,7 +44,9 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier)
     {
-        //
+        return Inertia::render('Supplier/Show', [
+            'supplier' => $supplier
+        ]);
     }
 
     /**
@@ -70,6 +73,15 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
-        //
+        /** Logica para poder eliminar un proveedor **/
+        /** No deberian existir pedidos al mismo **/
+        if(!ModelsRequest::where('supplier_id', $supplier->id)->first()) {
+            $supplier->delete();
+            return redirect()->route('supplier.index')->with('message', 'Proveedor eliminado');
+        }
+
+        /** Si existen pedidos solo desactivar **/
+        $supplier->update(['active' => false]);
+        return redirect()->route('supplier.index')->with('message', 'Proveedor desactivado');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
@@ -7,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
+    /** CRUD CATEDORIAS ORIDUCTOS **/
+    Route::resource('category', CategoryController::class);
     /** CRUD PRODUCTOS **/
     Route::resource('product', ProductController::class);
     // Route::get('/table/{table}/qr', [TableController::class, 'generateQr'])->name('table.qr_gen');
