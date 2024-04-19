@@ -9,7 +9,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="/build/assets/app.css">
+        {{-- <link rel="stylesheet" href="/build/assets/app.css"> --}}
         <!-- Scripts -->
         @routes
         @viteReactRefresh
@@ -18,6 +18,5 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
-        <script src="/build/assets/app.js"></script>
     </body>
 </html>
