@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 45);
             $table->string('description', 45);
-            $table->decimal('sale_price');
-            $table->decimal('product_cost');
+            $table->decimal('sale_price')->default(0.00);
+            $table->decimal('product_cost')->default(0.00);
             $table->boolean('active');
 
             $table->timestamps();

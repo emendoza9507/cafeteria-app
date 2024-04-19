@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Offer extends Model
 {
     use HasFactory;
+
+    public function products() {
+        return $this->belongsToMany(Product::class)->withPivot('product_count');
+    }
 }
