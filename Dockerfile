@@ -6,7 +6,7 @@ FROM richarvey/nginx-php-fpm:latest
 COPY . .
 
 RUN apk update
-RUN apk add --no-cache npm
+RUN apk add npm
 
 RUN npm install
 RUN npm run build
