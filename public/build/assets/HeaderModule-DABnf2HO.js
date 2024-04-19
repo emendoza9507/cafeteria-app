@@ -1,1 +1,0 @@
-import{j as e}from"./app-DLHhFt2j.js";import{T as a}from"./Modal-BSE03VYd.js";function n({title:r,...t}){return e.jsx(a,{className:"py-6 text-gray-900 text-center",letterSpacing:"5px",variant:"h5",...t,children:r})}export{n as H};

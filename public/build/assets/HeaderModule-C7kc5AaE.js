@@ -1,0 +1,1 @@
+import{j as e}from"./app-B7Vofn4y.js";import{T as a}from"./Modal-1gU17TLV.js";function n({title:r,...t}){return e.jsx(a,{className:"py-6 text-gray-900 text-center",letterSpacing:"5px",variant:"h5",...t,children:r})}export{n as H};
