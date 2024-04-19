@@ -1,125 +1,196 @@
 import { useState } from 'react';
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import MenuIcon from '@mui/icons-material/Menu';
+import Logout from '@mui/icons-material/Logout';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
+import CategoryIcon from '@mui/icons-material/Category';
+import { AppBar, IconButton, Menu, MenuItem, Snackbar, Toolbar, Tooltip, Typography} from '@mui/material';
+import { Settings } from '@mui/icons-material';
+import { useEffect } from 'react';
 
-export default function Authenticated({ user, header, children }) {
-    const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+export default function Authenticated({ user, header, children, flash }) {
+    const [open, setOpen] = useState(false);
+    const [openSnack, setOpenSnack] = useState(flash ? (flash.message ? true : false) : false);
+    const [anchorEl, setAnchorEl] = useState(null)
+    const message = flash ? (flash.message ? flash.message : null) : null
+
+    const toggleDrawer = (newOpen) => () => {
+        setOpen(newOpen);
+    };
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    useEffect(() => {
+        if(message) {
+            setOpenSnack(true)
+        }
+    }, [message])
+
+    const drawerOptions = [
+        { label: 'Categorias', href: route('category.index'), icon: <CategoryIcon/> },
+        { label: 'Productos', href: route('product.index'), icon: <InventoryIcon/> },
+        { label: 'Mesas', href: route('table.index'), icon: <TableRestaurantIcon/> },
+        { label: 'Proveedores', href: route('supplier.index'), icon: <PeopleAltIcon /> }
+    ];
+
+    const DrawerList = (
+        <Box sx={{ width: 250 }} role="presentation" >
+            <List>
+                <ListItem>
+                    <ListItemText variant="h3" className='uppercase text-gray-400' sx={{'& span': {fontWeight: 600, letterSpacing: '0.3em'}}}>
+                        Administracion
+                    </ListItemText>
+                </ListItem>
+            {drawerOptions.map((option, index) => (
+                <Link key={index} href={option.href}>
+                    <ListItem key={option.label} disablePadding>
+                        <ListItemButton >
+                            {option.icon && (
+                                <ListItemIcon>
+                                    {option.icon}
+                                </ListItemIcon>
+                            )}
+                            <ListItemText primary={option.label} />
+                        </ListItemButton>
+                    </ListItem>
+                </Link>
+            ))}
+            </List>
+            <Divider />
+            <List>
+            {['All mail', 'Trash', 'Spam'].map((text, index) => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+            </List>
+        </Box>
+    );
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <nav className="bg-white border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16">
-                        <div className="flex">
-                            <div className="shrink-0 flex items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
-                                </Link>
-                            </div>
-
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
-                                </NavLink>
-                            </div>
-                        </div>
-
-                        <div className="hidden sm:flex sm:items-center sm:ms-6">
-                            <div className="ms-3 relative">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="ms-2 -me-0.5 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
-                        </div>
-
-                        <div className="-me-2 flex items-center sm:hidden">
-                            <button
-                                onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
-                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+            {message && (<Snackbar
+                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                open={openSnack}
+                onClose={() => setOpenSnack(false)}
+                message={flash.message}
+            />)}
+            <AppBar>
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                        onClick={toggleDrawer(true)}
+                    >
+                        <MenuIcon/>
+                    </IconButton>
+                    <Typography variant="h6" component="div" className='flex justify-center flex-1'>
+                        <Link href={route('dashboard')} className='flex items-center'>
+                            <span className='text-md'>H</span>
+                            <span className='text-3xl font-bold'>&</span>
+                            <span className='text-md'>M</span>
+                        </Link>
+                    </Typography>
+                    <div>
+                        <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+                            <Tooltip title="Account settings">
+                            <IconButton
+                                onClick={handleMenu}
+                                size="small"
+                                sx={{ ml: 2 }}
+                                aria-controls={open ? 'menu-appbar' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
                             >
-                                <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                    <path
-                                        className={!showingNavigationDropdown ? 'inline-flex' : 'hidden'}
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={showingNavigationDropdown ? 'inline-flex' : 'hidden'}
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
+                                <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                            </IconButton>
+                            </Tooltip>
+                        </Box>
+                        <Menu
+                            id="menu-appbar"
+                            anchorEl={anchorEl}
+                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                            PaperProps={{
+                                elevation: 0,
+                                sx: {
+                                  overflow: 'visible',
+                                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                  mt: 1.5,
+                                  '& .MuiAvatar-root': {
+                                    width: 32,
+                                    height: 32,
+                                    ml: -0.5,
+                                    mr: 1,
+                                  },
+                                  '&::before': {
+                                    content: '""',
+                                    display: 'block',
+                                    position: 'absolute',
+                                    top: 0,
+                                    right: 14,
+                                    width: 10,
+                                    height: 10,
+                                    bgcolor: 'background.paper',
+                                    transform: 'translateY(-50%) rotate(45deg)',
+                                    zIndex: 0,
+                                  },
+                                },
+                              }}
+                        >
+                            <Link href={route('profile.edit')}>
+                                <MenuItem onClick={handleClose} style={{alignItems: 'center'}}>
+                                    <ListItemIcon>
+                                        <Settings fontSize="small" />
+                                    </ListItemIcon>
+                                    Perfil
+                                </MenuItem>
+                            </Link>
+                            <Link as='button' method='post' href={route('logout')}>
+                                <MenuItem onClick={handleClose}>
+                                    <ListItemIcon >
+                                        <Logout fontSize="small"/>
+                                    </ListItemIcon>
+                                    Salir
+                                </MenuItem>
+                            </Link>
+                        </Menu>
                         </div>
-                    </div>
-                </div>
+                </Toolbar>
+            </AppBar>
 
-                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
-                    <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
+            <Drawer open={open} onClose={toggleDrawer(false)}>
+                {DrawerList}
+            </Drawer>
 
-                    <div className="pt-4 pb-1 border-t border-gray-200">
-                        <div className="px-4">
-                            <div className="font-medium text-base text-gray-800">{user.name}</div>
-                            <div className="font-medium text-sm text-gray-500">{user.email}</div>
-                        </div>
-
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
-                            <ResponsiveNavLink method="post" href={route('logout')} as="button">
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
-                </header>
-            )}
-
-            <main>{children}</main>
+            <main className='pt-16'>{children}</main>
         </div>
     );
 }
