@@ -3,10 +3,6 @@ FROM richarvey/nginx-php-fpm:latest
 # RUN curl -sS https://getcomposer.org/installer | php -- \
 # --install-dir=/usr/bin --filename=composer && chmod +x /usr/bin/composer
 
-RUN apt-get update
-RUN apt-get install -y nodejs
-RUN npm install -g npm
-
 COPY . .
 
 # Image config
