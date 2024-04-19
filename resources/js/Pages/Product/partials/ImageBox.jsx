@@ -5,12 +5,10 @@ import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 
 
 export default function ImageBox ({file, handleChangeImage, handleRemoveImage}) {
-    const classes = useStyles();
-
     return (
         <Fragment>
             <input
-                className="w-full"
+                className="w-full hidden"
                 id='image'
                 type='file'
                 onChange={handleChangeImage}

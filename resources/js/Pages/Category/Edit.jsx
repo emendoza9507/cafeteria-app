@@ -22,7 +22,7 @@ export default function Edit({ auth, category, flash, ...props }) {
     const [success, setSuccess] = useState(false);
 
     const { data, errors, put, reset, setData } = useForm({
-        id: supplier.id,
+        id: category.id,
         category_name: category.category_name,
     })
 
@@ -89,106 +89,20 @@ export default function Edit({ auth, category, flash, ...props }) {
                 <div className="bg-white overflow-hidden shadow-sm">
                     <Grid component='form' columns={12} onSubmit={handleSubmit} container  spacing={2} className='px-4 py-6'>
                         <Grid item xs={12}>
-                            <Autocomplete
-                                id="grouped-demo"
-                                freeSolo
-                                options={suppliers.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
-                                groupBy={(option) => option.firstLetter}
-                                getOptionLabel={(option) => option.name}
-                                getOptionKey={(option) => option.name}
-                                onChange={(_, e) => setData('name', e.name)}
-                                inputValue={data.name}
-                                renderInput={(params) => <TextField
+                             <TextField
                                     fullWidth
                                     id="name"
                                     name="name"
                                     margin='normal'
-                                    label="Nombre de Producto"
+                                    label="Nombre de la Categoria"
                                     variant="outlined"
-                                    value={data.name}
-                                    onChange={(e) => setData('name', e.target.value)}
-                                    {...params}
-                                />}
-
-                            />
-                            <InputError message={errors.name} className="mt-2" />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                fullWidth
-                                margin='normal'
-                                label="Correo Electronico"
-                                variant="outlined"
-                                value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
-                            />
-                            <InputError message={errors.email} className="mt-2" />
-                        </Grid>
-                        <Grid item xs={12} container display="flex" justifyContent="space-around">
-                            <Grid item xs container direction="row" spacing={2}>
-                                <Grid item xs={12} md={4}>
-                                    <TextField
-                                        fullWidth
-                                        margin='normal'
-                                        label="Estado"
-                                        variant="outlined"
-                                        value={data.state}
-                                        onChange={(e) => setData('state', e.target.value)}
-                                    />
-                                    <InputError message={errors.state} className="mt-2" />
-                                </Grid>
-                                <Grid item xs={12} md={4}>
-                                    <TextField
-                                        fullWidth
-                                        margin='normal'
-                                        label="Ciudad"
-                                        variant="outlined"
-                                        value={data.city}
-                                        onChange={(e) => setData('city', e.target.value)}
-                                    />
-                                    <InputError message={errors.city} className="mt-2" />
-                                </Grid>
-                                <Grid item xs={12} md={4}>
-                                    <TextField
-                                        fullWidth
-                                        margin='normal'
-                                        label="Calle"
-                                        variant="outlined"
-                                        value={data.street}
-                                        onChange={(e) => setData('street', e.target.value)}
-                                    />
-                                    <InputError message={errors.street} className="mt-2" />
-                                </Grid >
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12} container display="flex" justifyContent="space-around">
-                            <Grid item xs container direction="row" spacing={2}>
-                                <Grid item xs={6}>
-                                    <PhoneInput value={data.phone_numbers} onChange={phones => setData('phone_numbers', phones)}/>
-                                    <InputError message={errors.stock} className="mt-2" />
-                                </Grid>
-                                <Grid item xs={6} display="flex" alignItems="center">
-                                    <Box>
-                                        <FormControlLabel control={<Switch defaultChecked onChange={e => setData('active', !data.active)} />} label="Activo" />
-                                        <InputError message={errors.min_stock} className="mt-2" />
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                fullWidth
-                                multiline
-                                margin='normal'
-                                label="Descripcion del Producto"
-                                variant="outlined"
-                                value={data.description}
-                                onChange={(e) => setData('description', e.target.value)}
-                            />
-                            <InputError message={errors.description} className="mt-2" />
+                                    value={data.category_name}
+                                    onChange={(e) => setData('category_name', e.target.value)}
+                                />
+                            <InputError message={errors.category_name} className="mt-2" />
                         </Grid>
                         <Grid item xs={12} display="flex" justifyContent="end" >
-                            <Button disabled={loading} type='submit' variant='contained'>
+                            <Button type='submit' variant='contained'>
                                 GUARDAR
                             </Button>
                         </Grid>

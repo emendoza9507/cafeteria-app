@@ -51,8 +51,8 @@ export default function Show({ auth, supplier, ...props }) {
                                     <tbody>
                                     {
                                     supplier.phone_numbers && Object.entries(JSON.parse(supplier.phone_numbers)).map(([key, value]) => (
-                                        <tr>
-                                            <th>{key}:</th>
+                                        <tr key={key + value}>
+                                            <th className='pr-2'>{String(key).toUpperCase()}:</th>
                                             <td>{value}</td>
                                         </tr>
                                     ))

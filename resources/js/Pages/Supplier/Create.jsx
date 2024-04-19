@@ -74,7 +74,7 @@ export default function Create({ auth, ...props }) {
                                     id="name"
                                     name="name"
                                     margin='normal'
-                                    label="Nombre de Producto"
+                                    label="Nombre del Proveedor"
                                     variant="outlined"
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
