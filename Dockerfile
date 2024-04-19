@@ -8,7 +8,7 @@ COPY . .
 RUN apk update
 RUN apk add npm
 
-RUN npm install
+RUN npm install --force
 RUN npm run build
 
 # Image config
