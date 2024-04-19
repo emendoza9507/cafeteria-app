@@ -2,42 +2,7 @@ import { Button, IconButton } from "@mui/material";
 import { Fragment } from "react";
 import { Image } from "@mui/icons-material";
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-import { makeStyles } from "@mui/styles";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        '& > *': {
-            margin: 2,
-        },
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column !important'
-    },
-    input: {
-        display: 'none'
-    },
-
-    imgBox: {
-        position: 'relative',
-        maxWidth: '360px',
-        alignSelf: 'center',
-    },
-
-    clearImg: {
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#000000a3',
-        top: 0,
-        display: 'none',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-
-    img: {
-        width: '100%'
-    }
-}))
 
 export default function ImageBox ({file, handleChangeImage, handleRemoveImage}) {
     const classes = useStyles();
@@ -45,7 +10,7 @@ export default function ImageBox ({file, handleChangeImage, handleRemoveImage}) 
     return (
         <Fragment>
             <input
-                className={classes.input}
+                className="w-full"
                 id='image'
                 type='file'
                 onChange={handleChangeImage}
@@ -55,9 +20,9 @@ export default function ImageBox ({file, handleChangeImage, handleRemoveImage}) 
                     Image
                 </Button>
             </label>
-            <div id='imgBox' className={classes.imgBox}>
-                <img src={file} className={classes.img}/>
-                <div id='clearImg' className={classes.clearImg}>
+            <div id='imgBox' className="relative self-center" style={{maxWidth: '360px'}}>
+                <img src={file} className="w-full"/>
+                <div id='clearImg' className="absolute w-full h-full top-0 hidden justify-center items-center" style={{backgroundColor: '#000000a3'}}>
                     <IconButton onClick={handleRemoveImage}>
                         <CancelPresentationIcon className='text-red-400' fontSize='large'/>
                     </IconButton>

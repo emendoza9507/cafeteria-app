@@ -4,14 +4,13 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Autocomplete, Box, Grid, IconButton, MenuItem, TextField  } from '@mui/material';
-import { makeStyles } from '@mui/styles'
 import InputError from '@/Components/InputError';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
 import ImageBox from './partials/ImageBox';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = (theme) => ({
     root: {
         '& > *': {
             margin: 2,
@@ -19,32 +18,8 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         display: 'flex',
         flexDirection: 'column !important'
-    },
-    input: {
-        display: 'none'
-    },
-
-    imgBox: {
-        position: 'relative',
-        maxWidth: '360px',
-        alignSelf: 'center',
-    },
-
-    clearImg: {
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#000000a3',
-        top: 0,
-        display: 'none',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-
-    img: {
-        width: '100%'
     }
-}))
+})
 
 export default function Create({ auth, categories, ...props }) {
     const classes = useStyles();
@@ -128,7 +103,7 @@ export default function Create({ auth, categories, ...props }) {
                         </Grid>
                         <Grid item xs={12} container display="flex" justifyContent="space-around">
                             <Grid item xs container direction="row" spacing={2}>
-                                <Grid item xs={12} md={6} className={classes.root}>
+                                <Grid item xs={12} md={6} sx={classes.root}>
                                     <ImageBox file={file} handleChangeImage={handleChangeImage} handleRemoveImage={(e) => {
                                         reset('image')
                                         setFile(null)

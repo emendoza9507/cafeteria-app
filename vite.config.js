@@ -6,18 +6,8 @@ export default defineConfig({
     plugins: [
         laravel({
             input: 'resources/js/app.jsx',
-            ssr: 'resources/js/ssr.jsx',
             refresh: true,
         }),
         react(),
     ],
-    build: {
-        rollupOptions: {
-            output: {
-                entryFileNames: `assets/[name].js`,
-                chunkFileNames: `assets/[name].js`,
-                assetFileNames: `assets/[name].[ext]`
-            }
-        }
-    }
 });
