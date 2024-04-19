@@ -1,5 +1,8 @@
 FROM richarvey/nginx-php-fpm:1.7.2
 
+RUN curl -sS https://getcomposer.org/installer | php -- \
+--install-dir=/usr/bin --filename=composer && chmod +x /usr/bin/composer
+
 COPY . .
 
 # Image config
