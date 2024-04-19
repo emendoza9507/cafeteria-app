@@ -6,7 +6,7 @@ chmod -R 775 /var/www/html/bootstrap/cache/
 
 echo "Running composer"
 composer global require hirak/prestissimo
-composer install --no-dev --working-dir=/var/www/html
+composer install --working-dir=/var/www/html
 
 php artisan inertia:start-ssr
 
