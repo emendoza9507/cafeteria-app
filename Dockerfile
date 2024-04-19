@@ -1,7 +1,7 @@
-FROM richarvey/nginx-php-fpm:1.7.2
+FROM richarvey/nginx-php-fpm:latest
 
-RUN curl -sS https://getcomposer.org/installer | php -- \
---install-dir=/usr/bin --filename=composer && chmod +x /usr/bin/composer
+# RUN curl -sS https://getcomposer.org/installer | php -- \
+# --install-dir=/usr/bin --filename=composer && chmod +x /usr/bin/composer
 
 COPY . .
 
