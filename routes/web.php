@@ -24,13 +24,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-$modules = [
-    'products',
-    'table',
-    'supplier',
-    'auth'
-];
-
-foreach($modules as $module) {
-    require __DIR__.'/'.$module.'.php';
-}
+require __DIR__.'/auth.php';
