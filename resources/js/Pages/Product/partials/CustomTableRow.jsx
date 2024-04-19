@@ -8,11 +8,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import DeleteModal from '@/Components/DeleteModal';
 import { Box, Collapse, IconButton, Switch, Table, TableBody, TableRow, TextField, Typography } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 
 const SyledTableCell = ({children, ...props}) => (<TableCell sx={{fontWeight: 700}} {...props}>{children}</TableCell>)
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = (theme) => ({
     container: {
         maxWidth: '160px',
         margin: '0 auto'
@@ -20,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     image: {
         width: '100%'
     }
-}));
+});
 
 export default function CustomTableRow ({product}) {
     const classes = useStyles();
@@ -58,7 +57,7 @@ export default function CustomTableRow ({product}) {
         },
         {
             label: 'IMAGEN',
-            value: (<Box className={classes.container}>{product.image && <img className={classes.image} src={`/storage/${product.image?.url}`}/>}</Box>)
+            value: (<Box sx={classes.container}>{product.image && <img sx={classes.image} src={`/storage/${product.image?.url}`}/>}</Box>)
         },
         {
             label: 'DESCRIPCION',

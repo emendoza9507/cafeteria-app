@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Link, useForm } from '@inertiajs/react';
 import { Fragment } from 'react';
 import TableCell from '@mui/material/TableCell';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';

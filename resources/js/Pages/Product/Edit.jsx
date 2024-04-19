@@ -1,18 +1,16 @@
+import { useEffect,useState } from 'react';
 import HeaderModule from '@/Components/HeaderModule';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
-import { Autocomplete, Box, CircularProgress, Grid, MenuItem, Snackbar, TextField  } from '@mui/material';
+import { Autocomplete, Box, Grid, MenuItem, Snackbar, TextField  } from '@mui/material';
 import InputError from '@/Components/InputError';
-import { useEffect } from 'react';
-import { useState } from 'react';
 import axios from 'axios';
 import { green } from '@mui/material/colors';
-import { makeStyles } from '@mui/styles';
 import ImageBox from './partials/ImageBox';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = () => ({
     root: {
         '& > *': {
             margin: 2,
@@ -45,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     img: {
         width: '100%'
     }
-}))
+})
 
 export default function Edit({ auth, product, categories,flash, ...props }) {
     const classes = useStyles();
@@ -163,7 +161,7 @@ export default function Edit({ auth, product, categories,flash, ...props }) {
                         </Grid>
                         <Grid item xs={12} container display="flex" justifyContent="space-around">
                             <Grid item xs container direction="row" spacing={2}>
-                                <Grid item xs={12} md={6} className={classes.root}>
+                                <Grid item xs={12} md={6} sx={classes.root}>
                                     <ImageBox file={file} handleChangeImage={handleChangeImage} handleRemoveImage={(e) => {
                                         reset('image')
                                         setFile(null)
