@@ -5,6 +5,12 @@ FROM richarvey/nginx-php-fpm:latest
 
 COPY . .
 
+RUN apk update
+RUN apk add --no-cache npm
+
+RUN npm install
+RUN npm run build
+
 # Image config
 ENV SKIP_COMPOSER 1
 ENV WEBROOT /var/www/html/public
