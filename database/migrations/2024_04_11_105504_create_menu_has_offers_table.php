@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menu_has_offers', function (Blueprint $table) {
-            $table->id();
+        Schema::create('menu_offer', function (Blueprint $table) {
             $table->foreignId('menu_id')->references('id')->on('menus');
             $table->foreignId('offer_id')->references('id')->on('offers');
-
-            $table->unique(['menu_id', 'offer_id']);
+            $table->primary(['menu_id', 'offer_id']);
         });
     }
 

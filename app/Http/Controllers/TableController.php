@@ -17,9 +17,10 @@ class TableController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pagination = Table::orderBy('name', 'asc')->simplePaginate();
+        $show = $request->query->getInt('show', 5);
+        $pagination = Table::orderBy('name', 'asc')->paginate($show);
         return Inertia::render('Table/Index', compact('pagination'));
     }
 

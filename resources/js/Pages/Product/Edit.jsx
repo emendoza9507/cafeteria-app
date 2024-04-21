@@ -45,7 +45,7 @@ const useStyles = () => ({
     }
 })
 
-export default function Edit({ auth, product, categories,flash, ...props }) {
+export default function Edit({ auth, product, categories, flash, ...props }) {
     const classes = useStyles();
     const title = "EDITAR PRODUCTO";
     const [openSnack, setOpenSnack] = useState(flash ? (flash.message ? true : false) : false);
@@ -73,15 +73,6 @@ export default function Edit({ auth, product, categories,flash, ...props }) {
         setData('image', e.target.files[0])
         setFile(URL.createObjectURL(e.target.files[0]))
     }
-
-    const buttonSx = {
-        ...(success && {
-          bgcolor: green[500],
-          '&:hover': {
-            bgcolor: green[700],
-          },
-        }),
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -143,6 +134,7 @@ export default function Edit({ auth, product, categories,flash, ...props }) {
                                 groupBy={(option) => option.firstLetter}
                                 getOptionLabel={(option) => option.name}
                                 getOptionKey={(option) => option.name}
+                                inputValue={data.name}
                                 onChange={(_, e) => setData('name', e.name)}
                                 renderInput={(params) => <TextField
                                     fullWidth
@@ -302,7 +294,7 @@ export default function Edit({ auth, product, categories,flash, ...props }) {
                         </Grid>
                         <Grid item xs={12} display="flex" justifyContent="end" >
                             <Button type='submit' variant='contained'>
-                                CREAR
+                                GUARDAR
                             </Button>
                         </Grid>
                     </Grid>

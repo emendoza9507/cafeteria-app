@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_has_requests', function (Blueprint $table) {
+        Schema::create('product_request', function (Blueprint $table) {
             $table->foreignId('product_id')->references('id')->on('products');
             $table->foreignId('request_id')->references('id')->on('requests');
             $table->decimal('stock_request');

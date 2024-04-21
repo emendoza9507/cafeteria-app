@@ -1,13 +1,13 @@
 import HeaderModule from '@/Components/HeaderModule';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import TableCell from '@mui/material/TableCell';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Collapse, IconButton, Table, TableBody, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Button, Collapse, IconButton, Pagination, Table, TableBody, TableHead, TableRow, Typography } from '@mui/material';
 import { Fragment, useState } from 'react';
 import DeleteModal from '@/Components/DeleteModal';
 import { useEffect } from 'react';
@@ -98,6 +98,11 @@ const CustomTableRow = ({table}) => {
 export default function List({ auth, pagination, ...props }) {
     const title = "MESAS";
     const tables = Array.from(pagination.data || []);
+
+    const handlePageChange = (e, p) => {
+        router.get(pagination.links[p].url)
+    }
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -110,7 +115,7 @@ export default function List({ auth, pagination, ...props }) {
 
                 <HeaderModule title={title}/>
 
-                <div className="bg-white overflow-hidden shadow-sm">
+                <Box className="bg-white overflow-hidden overflow-y-auto shadow-sm hideScroll" sx={{maxHeight: 600, overflow: 'scroll'}}>
                     <Table>
                         <TableHead>
                             <TableRow >
@@ -129,7 +134,19 @@ export default function List({ auth, pagination, ...props }) {
                             { tables.map((table) => (<CustomTableRow key={table.id} table={table}/>)) }
                         </TableBody>
                     </Table>
-                </div>
+                </Box>
+                <Box className="flex justify-center">
+                    { pagination.last_page > 1 &&
+                        <Pagination
+                            page={pagination.current_page}
+                            onChange={handlePageChange}
+                            className='mt-2'
+                            count={pagination.last_page}
+                            variant="outlined"
+                            color="primary"
+                        />
+                    }
+                </Box>
             </div>
         </AuthenticatedLayout>
     );

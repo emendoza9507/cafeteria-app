@@ -53,7 +53,7 @@ export default function ProveedorList({ auth, pagination, ...props }) {
                     <Table>
                         <TableHead className='sticky top-0 bg-gray-300 z-10'>
                             <TableRow >
-                                <SyledTableCell>NOMBRE</SyledTableCell>
+                                <SyledTableCell>PROVEEDOR</SyledTableCell>
                                 <SyledTableCell className="hidden sm:table-cell">CORREO</SyledTableCell>
                                 <SyledTableCell className="hidden sm:table-cell">ACTIVO</SyledTableCell>
                                 <TableCell align='center'>

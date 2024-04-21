@@ -52,7 +52,7 @@ export default function CategoryList({ auth, pagination, ...props }) {
                     <Table>
                         <TableHead className='sticky top-0 bg-gray-300 z-10'>
                             <TableRow >
-                                <SyledTableCell>NOMBRE</SyledTableCell>
+                                <SyledTableCell>CATEGORIA</SyledTableCell>
                                 <TableCell align='center'>
                                     <Link href={route('category.create')}>
                                     <Button variant='outlined' startIcon={<AddIcon />}>

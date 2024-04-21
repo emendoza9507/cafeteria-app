@@ -48,8 +48,8 @@ export default function ProductList({ auth, pagination, ...props }) {
                     <Table>
                         <TableHead className='sticky top-0 bg-gray-300 z-10'>
                             <TableRow >
+                                <SyledTableCell>PRODUCTO</SyledTableCell>
                                 <SyledTableCell></SyledTableCell>
-                                <SyledTableCell>NOMBRE</SyledTableCell>
                                 <SyledTableCell className="hidden sm:table-cell">CATEGORIA</SyledTableCell>
                                 <SyledTableCell className="hidden sm:table-cell">STOCK</SyledTableCell>
                                 <SyledTableCell className="hidden sm:table-cell">ACTIVE</SyledTableCell>

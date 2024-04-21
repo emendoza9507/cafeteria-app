@@ -6,7 +6,7 @@ use App\Http\Requests\Product\ProductStoreRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
-use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -15,12 +15,17 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pagination = Product::with(['category'])
+        $show = $request->query->getInt('show', 5);
+
+        $products = Product::with(['category'])
             ->orderBy('id', 'desc')
-            ->paginate(10);
-        return Inertia::render('Product/Index', compact('pagination'));
+            ->paginate($show);
+
+        return Inertia::render('Product/Index', array(
+            'pagination' => $products
+        ));
     }
 
     /**

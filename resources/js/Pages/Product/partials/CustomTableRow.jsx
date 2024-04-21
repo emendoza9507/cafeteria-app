@@ -30,62 +30,16 @@ export default function CustomTableRow ({product}) {
         remove(route('product.destroy', { product }))
     }
 
-    const detailOptions = [
-        {
-            label: 'NOMBRE',
-            value: product.name
-        },
-        {
-            label: 'CATEGORIA',
-            value: product.category.category_name
-        },
-        {
-            label: 'STOCK',
-            value: `${product.stock} ${product.um}`
-        },
-        {
-            label: 'MIN. STOCK',
-            value: product.min_stock
-        },
-        {
-            label: 'PRECIO/VENTA',
-            value: `$${product.sale_price}`
-        },
-        {
-            label: 'PRECIO/COMPRA',
-            value: `$${product.purchase_price}`
-        },
-        {
-            label: 'IMAGEN',
-            value: (<Box sx={classes.container}>{product.image && <img sx={classes.image} src={`/storage/${product.image?.url}`}/>}</Box>)
-        },
-        {
-            label: 'DESCRIPCION',
-            value: product.description
-        },
-        {
-            label: 'ESTADO',
-            value: (<Switch
-                disabled
-                checked={Boolean(product.active)}
-                inputProps={{ 'aria-label': 'controlled' }}
-            />)
-        }
-    ];
-
     return (
         <Fragment>
             <TableRow  sx={{ '& > *': { borderBottom: 'unset' } }}>
-                <TableCell className='w-10'>
-                    <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={() => setOpen(!open)}
-                    >
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
                 <TableCell >{product.name}</TableCell>
+                <TableCell className='pr-0'>
+                    {
+                        product.image &&
+                        <Box className="max-w-14">{<img className='w-full' src={`/storage/${product.image?.url}`}/>}</Box>
+                    }
+                </TableCell>
                 <TableCell className="hidden sm:table-cell">{product.category.category_name}</TableCell>
                 <TableCell className="hidden sm:table-cell">
                     { product.stock }{ product.um }
@@ -111,33 +65,6 @@ export default function CustomTableRow ({product}) {
                             onAccept={handleDelete}
                         />
                     </Box>
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    <Box sx={{ margin: 1 }}>
-                        <Typography variant='subtitle1' fontWeight={600} align='center' className='uppercase tracking-widest'>
-                            Detalles
-                        </Typography>
-                        <Table size="small" aria-label="purchases">
-                            <TableBody>
-                                {
-                                    (detailOptions).map(({label, value}, index) => (
-                                        <TableRow key={index} className='hover:bg-gray-100'>
-                                            <SyledTableCell className="border-none" align="center">
-                                                {label}
-                                            </SyledTableCell>
-                                            <TableCell className="border-none" align="center" width="50%">
-                                                {value}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                }
-                            </TableBody>
-                        </Table>
-                    </Box>
-                </Collapse>
                 </TableCell>
             </TableRow>
         </Fragment>

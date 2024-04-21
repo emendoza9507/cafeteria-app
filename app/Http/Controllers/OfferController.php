@@ -6,6 +6,7 @@ use App\Http\Requests\Offer\OfferStoreRequest;
 use App\Http\Requests\Offer\OfferUpdateRequest;
 use App\Models\Offer;
 use App\Models\Product;
+use App\Services\OfferService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -30,11 +31,7 @@ class OfferController extends Controller
      */
     public function create()
     {
-        $products = Product::where('active', true)->orderBy('name', 'asc')->get();
-
-        return Inertia::render('Offer/Create', array(
-            'products' => $products
-        ));
+        return Inertia::render('Offer/Create');
     }
 
     /**
@@ -45,9 +42,7 @@ class OfferController extends Controller
         $offer = Offer::create($request->validated());
 
         /* Se renderica el mismo componente pero con la oferta cargada */
-        return Inertia::render('Offer/Create', array(
-            'offer' => $offer
-        ))->with('message', 'Offerta creada...');
+        return redirect()->route('offer.edit', $offer->id)->with('message', 'Offerta creada...');
     }
 
     /**
@@ -67,30 +62,38 @@ class OfferController extends Controller
      */
     public function edit(Offer $offer)
     {
+
+        $products = Product::where('active', true)->orderBy('name', 'asc')->get();
         $offer->load('products');
 
         return Inertia::render('Offer/Edit', array(
-            'offer' => $offer
+            'offer' => $offer,
+            'products' => $products
         ));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(OfferUpdateRequest $request, Offer $offer)
+    public function update(OfferUpdateRequest $request, Offer $offer, OfferService $offerService)
     {
+        if($offer::has('menus.orders', '>', 0)->first()) {
+            return redirect()->back()->with('message', 'No puede actualizar una oferta con ordenes');
+        }
+
         $offer->update($request->validated());
 
         /** [{id: number, count: number}] : [{id: 1, count:3}, {id:4, count:50}] **/
-        $products = @json_decode($request->products);
+        $products = $request->products;
         $syncs = [];
-        foreach($products as $product) {
-            $syncs[] = [($product->id) => ['product_count' => $product->count]];
+        foreach($products as  $product) {
+            $syncs[$product['id']]  = ['product_count' => $product['product_count']];
         }
 
         $offer->products()->sync($syncs);
+        $offerService->calctOfferProductCost($offer);
 
-        return redirect()->route('offer.show', $offer->id)->with('message', 'Oferta actualizada.');
+        return redirect()->back()->with('message', 'Oferta actualizada.');
     }
 
     /**

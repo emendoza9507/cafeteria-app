@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -17,7 +16,7 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Dashboard');
-})->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -25,16 +24,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('login', [AuthenticatedSessionController::class, 'create'])
-                ->name('login');
-Route::post('login', [AuthenticatedSessionController::class, 'store']);
-require __DIR__.'/auth.php';
 
 $modules = [
+    'auth',
     'products',
-    'table',
     'supplier',
-    // 'auth'
+    'table',
+
+    'offer',
+    'menu'
 ];
 
 foreach($modules as $module) {

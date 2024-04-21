@@ -14,9 +14,10 @@ class SupplierController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pagination = Supplier::orderBy('id', 'desc')->paginate(10);
+        $show = $request->query->getInt('show', 5);
+        $pagination = Supplier::orderBy('id', 'desc')->paginate($show);
         return Inertia::render('Supplier/Index', [
             'pagination' => $pagination
         ]);

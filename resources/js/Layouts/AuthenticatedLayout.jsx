@@ -9,14 +9,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Logout from '@mui/icons-material/Logout';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
+import OfferIcon from '@mui/icons-material/Ballot';
 import CategoryIcon from '@mui/icons-material/Category';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import { AppBar, IconButton, Menu, MenuItem, Snackbar, Toolbar, Tooltip, Typography} from '@mui/material';
 import { Settings } from '@mui/icons-material';
 import { useEffect } from 'react';
@@ -43,12 +43,17 @@ export default function Authenticated({ user, header, children, flash }) {
         }
     }, [message])
 
-    const drawerOptions = [
+    const adminOptions = [
         { label: 'Categorias', href: route('category.index'), icon: <CategoryIcon/> },
         { label: 'Productos', href: route('product.index'), icon: <InventoryIcon/> },
+        { label: 'Proveedores', href: route('supplier.index'), icon: <PeopleAltIcon /> },
         { label: 'Mesas', href: route('table.index'), icon: <TableRestaurantIcon/> },
-        { label: 'Proveedores', href: route('supplier.index'), icon: <PeopleAltIcon /> }
     ];
+
+    const cafeteriaOptions = [
+        { label: 'Ofertas', href: route('offer.index'), icon: <OfferIcon/> },
+        { label: 'Menus', href: route('menu.index'), icon: <RestaurantMenuIcon/> }
+    ]
 
     const DrawerList = (
         <Box sx={{ width: 250 }} role="presentation" >
@@ -58,7 +63,7 @@ export default function Authenticated({ user, header, children, flash }) {
                         Administracion
                     </ListItemText>
                 </ListItem>
-            {drawerOptions.map((option, index) => (
+            {adminOptions.map((option, index) => (
                 <Link key={index} href={option.href}>
                     <ListItem key={option.label} disablePadding>
                         <ListItemButton >
@@ -75,15 +80,19 @@ export default function Authenticated({ user, header, children, flash }) {
             </List>
             <Divider />
             <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
+            {cafeteriaOptions.map((option, index) => (
+                <Link key={index} href={option.href}>
+                    <ListItem key={option.label} disablePadding>
+                        <ListItemButton >
+                            {option.icon && (
+                                <ListItemIcon>
+                                    {option.icon}
+                                </ListItemIcon>
+                            )}
+                            <ListItemText primary={option.label} />
+                        </ListItemButton>
+                    </ListItem>
+                </Link>
             ))}
             </List>
         </Box>
